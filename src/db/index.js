@@ -8,7 +8,7 @@ const connectDb = async () => {
         console.log(`\n Mongodb connected DB Host : ${connection.connection.host}`)
     } catch (error) {
         console.log("Mongodb connection failed",error)
-        process.exit(1)
+        process.exit(1)  // process.exit(code) terminates the Node.js process with an exit code.//     Exit Codes Meaning    process.exit(0) → Success (Normal exit) ✅ process.exit(1) → Failure/Error
     }
 }
 
