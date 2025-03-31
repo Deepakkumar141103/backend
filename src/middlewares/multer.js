@@ -12,7 +12,11 @@ const storage = multer.diskStorage({
   
 export const upload = multer({ 
     storage, 
-}) // dekho yhn pr humne direct storage isliye export nhi kiya kyunki woh multer ka ek indtance hai to agr humko
+}) 
+
+
+
+// dekho yhn pr humne direct storage isliye export nhi kiya kyunki woh multer ka ek indtance hai to agr humko
 //  use krna hai to uske  liye hame usse aese hi export krna hoga agr hamne aese export nhi kiya to jhn jhn isse
 //  use krna hoga hame phle isko instance banana hoga phir use kr paenge soo hmesha aese hi multe rko export krte
 //  hai
