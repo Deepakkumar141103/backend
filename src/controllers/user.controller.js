@@ -20,7 +20,8 @@ const generateAccessAndRefereshTokens = async(userId) =>{
         // hai to woh check nhi krta bss save kr deta hai yeh hum tab krte hai jab hum el field ko update krte 
         // hai 
         await user.save({ validateBeforeSave: false })
-
+        // yeh aese krke  hum tab use krte hai jab hume update krna hoo kisi field m bss kisi field ko remove 
+        // krna ho to unset use krte hai findbyandupdate yhn bhi use kr skte the but id phle hi nikl liye the 
         return {accessToken, refreshToken}
         // aur last m dono chiz return kr diye 
 
@@ -183,7 +184,8 @@ const loginUser = asyncHandler(async (req, res) =>{
 
 const logoutUser = asyncHandler(async(req, res) => {
     await User.findByIdAndUpdate(
-        req.user._id,
+        req.user._id, // unset  wala process tab use krna jab kisi ko remove krna hoo yeh kya krega kii uss id wale 
+        // document ko find krega and usse refreshtoken hta dega and new true se woh document update ho jaega 
         {
             $unset: {
                 refreshToken: 1 // this removes the field from document
@@ -193,11 +195,16 @@ const logoutUser = asyncHandler(async(req, res) => {
             new: true
         }
     )
-
+    // use of new 
+    //By default, findByIdAndUpdate() returns the old document (before the update).
+    //  Adding { new: true } ensures that the updated document (after $unset removes the field) is returned.
+    // Since findByIdAndUpdate() returns the old document by default, user.refreshToken still appears in the 
+    // console (even though it's removed in the database).
     const options = {
         httpOnly: true,
         secure: true
     }
+    // aese krke collie clear krte hai bss ho gya logout
 
     return res
     .status(200)
