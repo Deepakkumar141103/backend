@@ -62,6 +62,8 @@ userSchema.pre("save", async function (next) {
 userSchema.methods.isPasswordCorrect = async function(password){
     return await bcrypt.compare(password, this.password)
 }
+// ab hame req.password to mil jaega now document m password encrypted form m store hai to juske liye hame bcrypt 
+// juse krna hoga wai use kiye woh compare krke de dega ki same hai ya nhi 
 
 userSchema.methods.generateAccessToken = function(){
     return jwt.sign(
