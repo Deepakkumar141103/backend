@@ -215,36 +215,39 @@ const logoutUser = asyncHandler(async(req, res) => {
 
 const refreshAccessToken = asyncHandler(async (req, res) => {
     const incomingRefreshToken = req.cookies.refreshToken || req.body.refreshToken
-
+    // phle puarana refreshtoken liya 
     if (!incomingRefreshToken) {
         throw new ApiError(401, "unauthorized request")
     }
-
+    // agr refreshtoken nhi hai to error
     try {
         const decodedToken = jwt.verify(
             incomingRefreshToken,
             process.env.REFRESH_TOKEN_SECRET
         )
-    
-        const user = await User.findById(decodedToken?._id)
-    
-        if (!user) {
+    // aaye hue refreshtoken ko jwt se verify krte hai kaise krte hai to kaise refreshtoken accesstoken me token 
+    // secret hota hai jo hum env variable m set krte hai usse verify krte hai 
+    const user = await User.findById(decodedToken?._id)
+    // verify krne k  bad decodedtoken m woh sab data hoga jisse refreshtoken bna tha to hum usse id nikl kr usko 
+    // database m search kiye and document nikl liye 
+    if (!user) {
             throw new ApiError(401, "Invalid refresh token")
         }
-    
-        if (incomingRefreshToken !== user?.refreshToken) {
+    // phir check krnege jo refreshtoken aaya woh uss user k document m same refreshtoken hai ya nhi agr same nhi 
+    // hai to yeh erro de denge
+    if (incomingRefreshToken !== user?.refreshToken) {
             throw new ApiError(401, "Refresh token is expired or used")
             
         }
     
-        const options = {
+    const options = {
             httpOnly: true,
             secure: true
         }
-    
-        const {accessToken, newRefreshToken} = await generateAccessAndRefereshTokens(user._id)
-    
-        return res
+    // naya refresh and accesstoken generate krwaye
+    const {accessToken, newRefreshToken} = await generateAccessAndRefereshTokens(user._id)
+    // ab generate krwa kr resposne bhej diye cookie m naya refreshtoken and accesstoken set kr diye 
+    return res
         .status(200)
         .cookie("accessToken", accessToken, options)
         .cookie("refreshToken", newRefreshToken, options)
